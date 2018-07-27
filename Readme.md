@@ -1,4 +1,4 @@
-#Hotstar Downloader
+# Hotstar Downloader
 It supports only Tv Series, also Download only 1080p Tv Series from Hotstar.
 # Windows Setup
 [https://github.com/prabaprakash/Hotstar-Downloader/releases/download/v1.0.0/Hotstar.exe]
