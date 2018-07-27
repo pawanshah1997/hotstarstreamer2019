@@ -1,6 +1,8 @@
-``Hotstar Downloader``
+#Hotstar Downloader
+It supports only Tv Series, also Download only 1080p Tv Series from Hotstar.
+# Windows Setup
+[https://github.com/prabaprakash/Hotstar-Downloader/releases/download/v1.0.0/Hotstar.exe]
 ````
-go build Hotstar.go
 Hotstar.exe https://www.hotstar.com/tv/neeya-naana/s-80/hard-work-vs-smart-work/1100007278
 Count of Video Chunks:  442
 Workers:  2
