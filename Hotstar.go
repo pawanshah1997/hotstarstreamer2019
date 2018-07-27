@@ -169,6 +169,6 @@ func main() {
 		<-results
 	}
 	mergeParts(fileName, len(videoChunksMetaDatas))
-	fmt.Println("Download ", fileName)
+	fmt.Println("Downloaded ", fileName)
 	fmt.Println("Time Taken: ", time.Since(start).String())
 }
