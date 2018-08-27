@@ -2,6 +2,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -137,6 +138,38 @@ func isError(err error) bool {
 	}
 	return (err != nil)
 }
+func getQuality() string {
+	fmt.Println("Choose the Quality:")
+	fmt.Println("1. 1080p")
+	fmt.Println("2. 900p")
+	fmt.Println("3. 720p")
+	fmt.Println("4. 360p")
+	fmt.Println("5. 240p")
+	fmt.Println("6. 180p")
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Enter the options: ")
+	text, _ := reader.ReadString('\n')
+	switch strings.TrimSpace(text) {
+	case "1":
+		return "1920x1080"
+	case "2":
+		return "1600x900"
+	case "3":
+		return "1280x720"
+	case "4":
+		return "640x360"
+	case "5":
+		return "416x234"
+	case "6":
+		return "320x180"
+	default:
+		{
+			fmt.Println("Choose the right option")
+			os.Exit(1)
+		}
+	}
+	return ""
+}
 
 func main() {
 	if len(os.Args) == 1 {
@@ -149,7 +182,7 @@ func main() {
 	QualityMetaDataUrl := TwoGetMetaDataURL(cdnToken, id)
 	baseUrl := strings.Split(QualityMetaDataUrl, "master")[0]
 	// println(baseUrl)
-	Quality := "1920x1080"
+	Quality := getQuality()
 	VideoChunksMetaDataUrl := ThreeGetQualityMetaData(QualityMetaDataUrl, Quality)
 	videoChunksMetaDatas := FourGetVideoChunksMetaData(baseUrl + VideoChunksMetaDataUrl)
 	fmt.Println("Count of Video Chunks: ", len(videoChunksMetaDatas))
