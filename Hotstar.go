@@ -19,16 +19,16 @@ type cdn_token_struct struct {
 }
 
 type get_metaData_struct struct {
-	ErrorDescription string `json:"errorDescription"`
-	Message          string `json:"message"`
-	ResultCode       string `json:"resultCode"`
-	ResultObj        struct {
-		CheckCacheResult string `json:"checkCacheResult"`
-		Height           string `json:"height"`
-		Src              string `json:"src"`
-		Width            string `json:"width"`
-	} `json:"resultObj"`
-	SystemTime int `json:"systemTime"`
+	Body struct {
+		Results struct {
+			Item struct {
+				PlaybackURL string `json:"playbackUrl"`
+			} `json:"item"`
+			ResponseType string `json:"responseType"`
+		} `json:"results"`
+	} `json:"body"`
+	StatusCode      string `json:"statusCode"`
+	StatusCodeValue int    `json:"statusCodeValue"`
 }
 type chunks struct {
 	id  int
@@ -67,21 +67,24 @@ func OneGetCDNToken() string {
 	return _cdntoken.Token
 }
 
+//https://api.hotstar.com/h/v1/play?contentId
 func TwoGetMetaDataURL(cdnToken string, id string) string {
-	var url = "https://secure-getcdn.hotstar.com/AVS/besc?hotstarauth=" + cdnToken + "&action=GetCDN&appVersion=5.0.40&asJson=Y&channel=TABLET&id=" + id + "&type=VOD"
+	var url = "https://api.hotstar.com/h/v1/play?contentId=" + id
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36")
 	req.Header.Set("authority", "www.hotstar.com")
+	req.Header.Set("x-platform-code", "TABLET")
+	req.Header.Set("x-country-code", "IN")
+	req.Header.Set("hotstarauth", "st=1538430664~exp=1538436664~acl=/*~hmac=cb435944acf67ce4132d5d8351507faa743812fd7bea674da401f684df7d9870")
 	resp, _ := client.Do(req)
 	defer resp.Body.Close()
 	_metaDataStruct := new(get_metaData_struct)
 	json.NewDecoder(resp.Body).Decode(_metaDataStruct)
-	return _metaDataStruct.ResultObj.Src
+	return _metaDataStruct.Body.Results.Item.PlaybackURL
 }
 func ThreeGetQualityMetaData(url string, quality string) string {
 	client := &http.Client{}
-	// println(url)
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36")
 	req.Header.Set("authority", "www.hotstar.com")
@@ -178,10 +181,9 @@ func main() {
 	}
 	id, fileName, workers := Initiate()
 	// println(id, fileName)
-	cdnToken := OneGetCDNToken()
+	cdnToken := ""
 	QualityMetaDataUrl := TwoGetMetaDataURL(cdnToken, id)
-	baseUrl := strings.Split(QualityMetaDataUrl, "master")[0]
-	// println(baseUrl)
+	baseUrl := strings.Replace(strings.Split(QualityMetaDataUrl, "?")[0], "master.m3u8", "", -1)
 	Quality := getQuality()
 	VideoChunksMetaDataUrl := ThreeGetQualityMetaData(QualityMetaDataUrl, Quality)
 	videoChunksMetaDatas := FourGetVideoChunksMetaData(baseUrl + VideoChunksMetaDataUrl)
