@@ -1,3 +1,4 @@
+# Note not working, Hotstar changed the CDN authencation process
 # Hotstar Downloader
 It supports only Tv Series from Hotstar.
 # Windows Setup
