@@ -68,18 +68,19 @@ func OneGetCDNToken() string {
 }
 
 //https://api.hotstar.com/h/v1/play?contentId
-func TwoGetMetaDataURL(cdnToken string, id string) string {
-	var url = "https://api.hotstar.com/h/v1/play?contentId=" + id
+func TwoGetMetaDataURL(cdnToken string, id string, hotstarUrl string) string {
+	var url = "http://localhost:3000/?url=" + hotstarUrl
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36")
 	req.Header.Set("authority", "www.hotstar.com")
 	req.Header.Set("x-platform-code", "TABLET")
 	req.Header.Set("x-country-code", "IN")
-	req.Header.Set("hotstarauth", "st=1538430664~exp=1538436664~acl=/*~hmac=cb435944acf67ce4132d5d8351507faa743812fd7bea674da401f684df7d9870")
+	req.Header.Set("hotstarauth", "st=1540230733~exp=1540236733~acl=/*~hmac=9ed52df2a7ff3dae36b16e6deb73f25a5ea0f85a1cdc8be7c53d2eca4b3b93df")
 	resp, _ := client.Do(req)
 	defer resp.Body.Close()
 	_metaDataStruct := new(get_metaData_struct)
+	fmt.Println(resp.Body)
 	json.NewDecoder(resp.Body).Decode(_metaDataStruct)
 	return _metaDataStruct.Body.Results.Item.PlaybackURL
 }
@@ -116,10 +117,11 @@ func FourGetVideoChunksMetaData(url string) []string {
 	return chunks
 }
 
-func Initiate() (string, string, int) {
+func Initiate() (string, string, int, string) {
+	url := os.Args[1]
 	sl := strings.Split(os.Args[1], "/")
 	workers := 2
-	return sl[len(sl)-1], sl[len(sl)-4] + "_" + sl[len(sl)-3] + "_" + sl[len(sl)-2] + ".ts", workers
+	return sl[len(sl)-1], sl[len(sl)-4] + "_" + sl[len(sl)-3] + "_" + sl[len(sl)-2] + ".ts", workers, url
 }
 
 func mergeParts(name string, limit int) {
@@ -179,10 +181,10 @@ func main() {
 		fmt.Printf("pass the hotstar url")
 		return
 	}
-	id, fileName, workers := Initiate()
+	id, fileName, workers, url := Initiate()
 	// println(id, fileName)
 	cdnToken := ""
-	QualityMetaDataUrl := TwoGetMetaDataURL(cdnToken, id)
+	QualityMetaDataUrl := TwoGetMetaDataURL(cdnToken, id, url)
 	baseUrl := strings.Replace(strings.Split(QualityMetaDataUrl, "?")[0], "master.m3u8", "", -1)
 	Quality := getQuality()
 	VideoChunksMetaDataUrl := ThreeGetQualityMetaData(QualityMetaDataUrl, Quality)
