@@ -1,6 +1,10 @@
-# Note not working, Hotstar changed the CDN authencation process
-# Hotstar Downloader
+# POC - Hotstar Downloader
 It supports only Tv Series from Hotstar.
+# First Run Node Server
+```
+1. npm install
+2. npm start
+```
 # Windows Setup
 [https://github.com/prabaprakash/Hotstar-Downloader/releases/download/1.0.1/Hotstar.exe]
 ````
