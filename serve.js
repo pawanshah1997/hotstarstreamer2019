@@ -9,7 +9,7 @@ const pevents = [
 ];
 app.get('/', async (req, res) => { 
      // Create headless session
-     const browser = await puppeteer.launch();
+     const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
      const page = await browser.newPage();
      const client = await page.target().createCDPSession();
      // Log puppeter page notifications
