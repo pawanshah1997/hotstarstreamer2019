@@ -6,7 +6,7 @@ It supports only Tv Series from Hotstar.
 2. npm start
 ```
 # Windows Setup
-[https://github.com/prabaprakash/Hotstar-Downloader/releases/download/1.0.1/Hotstar.exe]
+[https://github.com/prabaprakash/Hotstar-Downloader/releases/download/1.2/Hotstar.exe]
 ````
 Hotstar.exe https://www.hotstar.com/tv/neeya-naana/s-80/poets-vs-women/1100006996
 Choose the Quality:
