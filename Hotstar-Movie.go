@@ -1,4 +1,4 @@
-//https://www.hotstar.com/tv/neeya-naana/s-80/hard-work-vs-smart-work/1100007278
+//https://www.hotstar.com/movies/baahubali2-the-conclusion/1770016247/watch
 package main
 
 import (
